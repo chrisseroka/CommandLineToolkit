@@ -5,11 +5,9 @@ param(
 if ($phrase -ne $null)
 {
    Import-Module ps-menu
-
-   $dirs = @(Get-ChildItem C:\ | ?{ $_.PSIsContainer } | %{$_.FullName})
-   $dirs += @(Get-ChildItem C:\my\Tools | ?{ $_.PSIsContainer } | %{$_.FullName}) 
-   $dirs += @(Get-ChildItem C:\Projects | ?{ $_.PSIsContainer } | %{$_.FullName}) 
-
+   
+   $favourites = @("C:\", "C:\my\Tools", "C:\Projects")
+   $dirs = @($favourites | foreach { gci $_ } | where {$_.PSIsContainer} | foreach {$_.FullName})
    $found = @($dirs | where { $_.ToLower().Contains($phrase.ToLower())})
 
    if ($found.Length -gt 1)
